@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import model.RequestLine;
 import util.HttpRequestUtils;
 
 public class RequestHandler extends Thread {
@@ -34,8 +35,8 @@ public class RequestHandler extends Thread {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
 
-            String url = getUrl(in);
-            byte[] body = makeBody(url);
+            RequestLine requestLine = getRequestLine(in);
+            byte[] body = makeBody(requestLine.getUrl());
 
             response200Header(dos, body.length);
             responseBody(dos, body);
@@ -51,9 +52,9 @@ public class RequestHandler extends Thread {
         return read(path).getBytes();
     }
 
-    private String getUrl(InputStream in) throws IOException {
+    private RequestLine getRequestLine(InputStream in) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-        return HttpRequestUtils.parseUrl(bufferedReader.readLine());
+        return HttpRequestUtils.parseRequestLine(bufferedReader.readLine());
     }
 
     private String read(String fileName) throws IOException {

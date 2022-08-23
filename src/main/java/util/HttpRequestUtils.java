@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import model.RequestLine;
 
 public class HttpRequestUtils {
     /**
@@ -53,9 +54,9 @@ public class HttpRequestUtils {
         return getKeyValue(header, ": ");
     }
 
-    public static String parseUrl(String line) {
+    public static RequestLine parseRequestLine(String line) {
         String[] values = line.split(" ");
-        return values[1];
+        return new RequestLine(values[0], values[1], values[2]);
     }
 
     public static class Pair {
